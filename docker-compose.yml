@@ -1,0 +1,105 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro # Monte le fichier de config Prometheus en lecture seule
+      - prometheus_data:/prometheus # Volume pour les données de Prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+    # Pas de 'depends_on' circulaire ici. Grafana et Prometheus peuvent démarrer indépendamment au niveau de Docker Compose.
+    networks:
+      - monitoring-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      # --- AJOUTE CES LIGNES POUR LA CONFIGURATION SMTP ---
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.gmail.com:587 # Ou ton_serveur_smtp:port
+      - GF_SMTP_USER=tahia.chongmook@gmail.com # Ton adresse email (nom d'utilisateur SMTP)
+      - GF_SMTP_PASSWORD=cpkl cgbj hwww dztk # IMPORTANT : Utilise un mot de passe d'application pour Gmail !
+      - GF_SMTP_FROM_ADDRESS=tahia.chongmook@gmail.com # L'adresse email d'où les notifications seront envoyées
+      - GF_SMTP_FROM_NAME=Alertes Grafana
+      - GF_SMTP_STARTTLS_AUTO=true # Recommandé pour le port 587
+      # - GF_SMTP_USE_SSL=true # Utilise ceci pour le port 465, pas 587 (décommente si nécessaire)
+      # - GF_SMTP_SKIP_VERIFY=false # Garde faux pour la sécurité, vrai seulement si vraiment nécessaire pour les certificats auto-signés
+      # --- FIN DE LA CONFIGURATION SMTP ---
+    networks:
+      - monitoring-net
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100" # Port par défaut de Loki
+    volumes:
+      - loki_data:/loki # Volume pour les données de Loki (logs et index)
+      - ./loki-config.yaml:/etc/loki/config.yaml:ro # Monte le fichier de config Loki en lecture seule
+    command:
+      - -config.file=/etc/loki/config.yaml
+    networks:
+      - monitoring-net
+ 
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yaml:ro # Monte le fichier de config Promtail
+      # IMPORTANT : Ce volume permet à Promtail de lire les logs des conteneurs Docker sur ton hôte.
+      # C'est le chemin standard pour les logs JSON des conteneurs Docker.
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      # Ce volume permet à Promtail de se connecter à l'API Docker pour récupérer les labels des conteneurs.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command:
+      - -config.file=/etc/promtail/config.yaml # Commande pour exécuter Promtail avec sa config
+    networks:
+      - monitoring-net
+    depends_on:
+      - loki # Promtail a besoin de Loki pour envoyer les logs
+
+  tempo:
+    image: grafana/tempo:2.8.1
+    container_name: tempo
+    ports:
+      - "3200:3200" # Tempo gRPC (par défaut)
+      - "4317:4317" # OpenTelemetry gRPC
+      - "4318:4318" # OpenTelemetry HTTP
+      - "14268:14268" # Jaeger Thrift HTTP
+      - "14250:14250" # Jaeger gRPC
+      - "9411:9411" # Zipkin
+    command: -config.file=/etc/tempo/shared-config.yaml
+    user: "0" # Ajouter cette ligne
+    volumes:
+      - tempo_data:/tmp/tempo # Stockage local pour Tempo
+      - ./tempo-config.yaml:/etc/tempo/shared-config.yaml # Fichier de configuration Tempo
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+  pushgateway:
+    image: prom/pushgateway:latest
+    container_name: pushgateway
+    ports:
+      - "9091:9091" # Le port par défaut du Pushgateway (9091) mappé sur ton hôte
+    networks:
+      - monitoring-net # Très important : S'assurer qu'il est sur le même réseau Docker que Prometheus
+
+volumes:
+  prometheus_data: # Définition du volume nommé pour Prometheus
+  grafana_data: # Définition du volume nommé pour Grafana
+  loki_data: # Définition du volume nommé pour Loki
+  tempo_data: # Définition du volume nommé pour Tempo
+
+networks:
+  monitoring-net:
+    driver: bridge # Définit un réseau bridge pour que les conteneurs puissent communiquer entre eux par leur nom de service
