@@ -79,7 +79,20 @@ Pour être informer des incidents suite aux évènements anormales crées lors d
 
 - Création d'un API/TOKEN (très important à retenir)
 
-- 
+- Création d'un nouveau point de contact
 
+<img width="1896" height="901" alt="POINT DE CONTACT TELEPHONE" src="https://github.com/user-attachments/assets/099531a6-a44d-4e04-b0a8-19d65520aea8" />
+
+*6.2 MAIL (Alertes par Email)*
+
+- Création d'un nouveau point de contact
+
+<img width="1898" height="901" alt="POINT DE CONTACT MAIL" src="https://github.com/user-attachments/assets/83da08ad-5001-4d65-8c5c-0f861cd6c944" />
+
+**7. Entre autres, on pourra également voir sur un navigateur les métriques et la santé de PROMETHEUS:9090
+
+<img width="1911" height="960" alt="LOCALHOST9090METRICS" src="https://github.com/user-attachments/assets/4cc4b694-2cc7-4a45-9aa8-886142def92e" />
+
+<img width="1892" height="956" alt="LOCALHOST9090TARGETS" src="https://github.com/user-attachments/assets/a893dee8-0d5e-48fc-a3a1-4accfcb7193a" />
 
 
