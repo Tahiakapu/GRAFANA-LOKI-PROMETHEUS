@@ -1,0 +1,163 @@
+---
+title: "Stage ISPF - Stack observation"
+author: "Tahia KAPU"
+format: pptx
+editor: visual
+theme: dracula
+---
+
+## C'est quoi une stack d'observation ?
+
+Une stack d'observation permet de surveiller le fonctionnement d'un système ou d'une application.
+
+-   Identifier les erreurs
+-   Analyser les performances
+-   Visualiser les données en temps réel
+
+Elle repose sur : 
+
+- **Logs** (ce qu'il s'est passé) 
+- **Métriques** (ce qu’il se passe en chiffres)
+
+------------------------------------------------------------------------
+
+## Définitions
+
+### 🧾 Logs – Ce qu’il s’est passé
+
+Un **log** est un message texte écrit par un programme
+
+#### RFC 5424
+```
+<34>1 2025-07-24T14:30:10.123Z host.example.com sshd 12345 ID47 - User login successful for 'jdoe'
+```
+
+
+------------------------------------------------------------------------
+
+| **Partie**                         | **Valeur**          | **Description**                                        |
+| ---------------------------------- | ------------------- | ------------------------------------------------------ |
+| `<34>`                             | **PRI**             | Priorité du message : (Facility × 8 + Severity)        |
+| `2025-07-24`         | **Timestamp**       | Date/heure ISO 8601 avec millisecondes                 |
+| `host.example.com`                 | **Hostname**        | Nom de l’hôte qui envoie le message                    |
+| `sshd`                             | **App-name**        | Nom de l'application ou service                        |
+| `12345`                            | **Procid**          | ID du processus (souvent PID)                          |
+| `User login...` | **Message (msg)**   | Contenu du message                                     |
+
+
+------------------------------------------------------------------------
+
+### 📊 Métriques – Ce qu’il se passe (en chiffres)
+
+Une **métrique** est une valeur numérique mesurée régulièrement :
+
+-   Exemples :
+    -   Temps de réponse
+    -   Taux d'erreur
+    -   Nombre de requêtes/sec
+
+------------------------------------------------------------------------
+
+#### Prometheus format :
+
+```text
+node_cpu_usage_percent{instance="server1", core="0"} 12.4
+```
+
+
+| **Partie**                       | **Signification**                                           |
+| -------------------------------- | ----------------------------------------------------------- |
+| `node_cpu_usage_percent`         | Nom de la métrique : pourcentage d’utilisation CPU          |
+| `{instance="server1", core="0"}` | Étiquettes (labels) : identifient le serveur et le cœur CPU |
+| `12.4`                           | Valeur actuelle : 12,4 % de CPU utilisé sur ce cœur         |
+
+------------------------------------------------------------------------
+
+
+## 📈 Visualisation – Avec Grafana
+
+**Grafana** permet de créer des tableaux de bord pour :
+
+-   Visualiser les **métriques** (depuis Prometheus)
+-   Lire les **logs** (depuis Loki)
+-   Avoir une **vue d’ensemble rapide et claire**
+
+------------------------------------------------------------------------
+
+## 🧠 Résumé simple
+
+| Outil | Sert à quoi ? | Type de données |
+|------------------|-------------------------------|-----------------------|
+| **Loki** | Lire ce qu’il s’est passé (logs) | Textes (messages) |
+| **Prometheus** | Suivre les chiffres (métriques) | Nombres (compteurs…) |
+| **Grafana** | Voir tout joliment | Graphiques / tableaux de bord |
+
+------------------------------------------------------------------------
+
+## 🏛️ Infrastructure
+
+L'ISPF utilise Proxmox VE comme solution de virtualisation.
+
+| **Nœud**     | **cores** | **Mémoire**   |
+|--------------|-----------|---------------|
+| `dellR530`   | 40        | 62.7 GiB      |
+| `dl360-hv7`  | 40        | 94.0 GiB      |
+| `dl360-hv8`  | 40        | 94.0 GiB      |
+| `dl360-hv9`  | 48        | 125.6 GiB     |
+| **🟰 Total** | **168**   | **376.3 GiB** |
+
+------------------------------------------------------------------------
+
+## 🏛️VM
+
+![](promox-ispf.jpg)
+
+------------------------------------------------------------------------
+
+## Screenshots (Logs)
+
+![](graylog.jpg)
+
+------------------------------------------------------------------------
+
+## Screenshots (Logs)
+
+![](log-grafana.jpg)
+
+------------------------------------------------------------------------
+
+## Screenshots (Métriques)
+
+![](observium.jpg)
+
+------------------------------------------------------------------------
+
+## Screenshots (Métriques)
+
+![](influx.jpg)
+
+------------------------------------------------------------------------
+
+## Screenshots (Grafana)
+
+![](grafana1.jpg)
+
+------------------------------------------------------------------------
+
+## Screenshots (Grafana)
+
+![](grafana2.jpg)
+
+------------------------------------------------------------------------
+
+## Hébergement sur Docker
+
+| **🔍 Critère** | **🖥️ VM** | **🐳 Docker** |
+|------------------|--------------------------|----------------------------|
+| ⚡ Démarrage | 🐢 Lent | 🚀 Très rapide |
+| ⚖️ Poids | 🏋️‍♂️ Lourd (avec OS complet) | 🪶 Léger (sans OS complet) |
+| 🔒 Isolation | 🔐 Très forte (OS séparé) | 🔓 Moins forte (partage du noyau) |
+| 🌍 Portabilité | 🚛 Moyenne | 📦 Excellente |
+| 🧰 Utilisation | 🧪 Tester des systèmes complets | ⚙️ Déployer des applis légères |
+
+## Merci !
