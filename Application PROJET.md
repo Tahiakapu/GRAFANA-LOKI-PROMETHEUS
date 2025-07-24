@@ -6,6 +6,7 @@
 
 **2. Création des fichiers du docker compose:** sur GITHUB.COM et local
 -
+
 - docker-compose.yml (avec les services GRAFANA, PROMTAIL, LOKI, PROMETHEUS, PUSHGATEWAY, TEMPO, les volumes et les networks)
 
 - prometheus.yml
@@ -16,9 +17,10 @@
 
 - tempo-config.yaml
 
-Mettre tout dans un seul dossier au même niveau, enregistrer les fichiers sur "Tous les fichiers" et bien noter le chemin pour la commande
+Mettre tout dans un seul dossier au même niveau, enregistrer les fichiers sur "Tous les fichiers" en LOCAL ou sur GITHUB et bien noter le chemin pour la commande dans docker-compose
 
 <img width="1861" height="743" alt="GITHUB PROJET GRAFANA" src="https://github.com/user-attachments/assets/c7c42b8c-c357-4db5-8aea-2a5efe572c0e" />
+
 
 **3. Sur Docker, créer les conteneurs (containers) avec la commande :**
 -
@@ -30,7 +32,8 @@ Et voir si tous les conteneurs sont bien monté (UP)
 
 <img width="1919" height="972" alt="Docker Desktop Stack" src="https://github.com/user-attachments/assets/ea3b4ac0-b66c-4111-82c6-7beba0c92293" />
 
-**4. Sur un navigateur, ouvrir un URL **
+
+**4. Sur un navigateur, ouvrir un URL**
 -
 
 http://localhost:3000
@@ -38,6 +41,7 @@ http://localhost:3000
 L'interface GRAFANA doit apparaître
 
 <img width="1919" height="893" alt="INTERFACE GRAFANA" src="https://github.com/user-attachments/assets/72639671-6403-4d44-8257-9393a0ee50be" />
+
 
 **5. On crée des nouvelles sources de données et de nouveaux tableaux de bord**
 -
@@ -85,7 +89,7 @@ Pour être informer des incidents suite aux évènements anormales crées lors d
 
 *6.2 MAIL (Alertes par Email)*
 
-- Création d'un nouveau point de contact
+- Création d'un nouveau point de contact et suivre les instructions pas compliquées
 
 <img width="1898" height="901" alt="POINT DE CONTACT MAIL" src="https://github.com/user-attachments/assets/83da08ad-5001-4d65-8c5c-0f861cd6c944" />
 
