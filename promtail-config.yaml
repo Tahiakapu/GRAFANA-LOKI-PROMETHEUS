@@ -1,0 +1,20 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml # Promtail utilise ce fichier pour savoir où il s'est arrêté de lire les logs
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push # L'adresse de ton service Loki dans le réseau Docker
+
+scrape_configs:
+  - job_name: container_logs # Nom du job pour identifier ces logs dans Loki
+    pipeline_stages:
+      - docker: {} # Ce stage va automatiquement extraire les labels Docker (nom du conteneur, ID, etc.)
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: container_logs # Un label général pour identifier la source de ces logs
+          __path__: /var/lib/docker/containers/*/*json.log # Chemin des logs Docker sur l'hôte
