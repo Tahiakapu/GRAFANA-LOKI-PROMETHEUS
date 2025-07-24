@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s # Intervalle par défaut pour la collecte de métriques
+
+scrape_configs:
+  - job_name: 'prometheus' # Job pour les métriques de Prometheus lui-même
+    static_configs:
+      - targets: ['localhost:9090'] # Prometheus scrap ses propres métriques
+
+  - job_name: 'grafana' # Job pour les métriques internes de Grafana
+    static_configs:
+      - targets: ['grafana:3000'] # Utilise le nom de service 'grafana' pour la communication Docker
+
+  - job_name: 'node_exporter' # Job pour les métriques de ton PC via Node Exporter
+    static_configs:
+      - targets: ['host.docker.internal:9100'] # 'host.docker.internal' est l'adresse IP de ton PC hôte vue depuis un conteneur Docker
+
+  - job_name: 'pushgateway'
+    # IMPORTANT : Permet à Prometheus de conserver les labels (comme 'instance', 'job')
+    # que l'application cliente envoie au Pushgateway.
+    honor_labels: true
+    static_configs:
+      - targets: ['pushgateway:9091'] # 'pushgateway' est le nom du service Docker que nous venons d'ajouter    
