@@ -34,7 +34,7 @@ La migration vers Grafana Loki et Prometheus vise à atteindre les objectifs sui
 -
 **4.1. Prometheus**
 
-Prometheus est un système open-source de surveillance et d'alerte. Il est basé sur une architecture "pull", où Prometheus va interroger les "exporters" exposant des métriques sur les cibles à surveiller.
+Prometheus est un système open-source de surveillance et d'alerte basé sur une architecture "pull" (tirer), où Prometheus va interroger les "exporters" exposant des métriques sur les cibles à surveiller.
 
 - Modèle de données multidimensionnel : Les métriques sont identifiées par des noms et des paires clé/valeur (labels), permettant une grande flexibilité de requêtage.
 
