@@ -1,0 +1,27 @@
+server:
+  http_listen_port: 3200
+  grpc_listen_port: 9095
+
+distributor:
+  receivers:
+    jaeger:
+      protocols:
+        grpc:
+        thrift_compact:
+        thrift_binary:
+        thrift_http:
+    zipkin: {}
+    otlp:
+      protocols:
+        grpc:
+        http:
+
+ingester:
+  max_block_bytes: 104857600 # 100MB en octets
+  max_block_duration: 5m
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /tmp/tempo/traces # Chemin pour stocker les traces
