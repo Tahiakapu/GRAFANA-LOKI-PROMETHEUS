@@ -116,7 +116,7 @@ Docker Compose est un outil pour définir et exécuter des applications Docker m
 -
 L'architecture cible envisagée pour l'observabilité sera la suivante, avec les composants déployés sous forme de conteneurs Docker et orchestrés par Docker Compose pour la stack principale :
 
-METTRE LE DIAGRAMME POUR L ARCHITECTURE DE LA STACK
+<img width="3840" height="3033" alt="Untitled diagram _ Mermaid Chart-2025-07-24-182758" src="https://github.com/user-attachments/assets/5d2a499e-92e7-4b1f-9aa1-12fb805807f2" />
 
 *Explications des ajouts :*
 
@@ -223,3 +223,5 @@ Le Pushgateway est représenté comme un service au sein de la stack Docker Comp
 - Journalisation de Sécurité : Configurer la journalisation des accès et des actions sur les composants de l'observabilité.
 
 - Mises à Jour des Images Docker : Maintenir les images Docker à jour pour bénéficier des correctifs de sécurité.
+
+
